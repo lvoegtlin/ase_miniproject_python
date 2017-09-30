@@ -1,3 +1,4 @@
 No .gitignore files found. Retry after running:
 
     $ joe update
+.idea/
