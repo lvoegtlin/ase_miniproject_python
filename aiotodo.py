@@ -164,13 +164,13 @@ async def delete_tag_to_todo(request):
 
     return web.Response(status=200)
 
+
 # tags section
 async def get_all_tags(request):
     session = request.app['dbsession']()
     rows = session.query(Tag).all()
     tags = [row.toDict() for row in rows]
     return web.json_response(tags)
-
 
 
 async def create_tag(request):
@@ -254,10 +254,10 @@ def app_factory(args=()):
     # Configure default CORS settings.
     cors = aiohttp_cors.setup(app, defaults={
         "*": aiohttp_cors.ResourceOptions(
-                allow_credentials=True,
-                expose_headers="*",
-                allow_headers="*",
-            )
+            allow_credentials=True,
+            expose_headers="*",
+            allow_headers="*",
+        )
     })
 
     app.on_startup.append(connect_db)
@@ -276,12 +276,12 @@ def app_factory(args=()):
     cors.add(app.router.add_patch('/todos/{id:\d+}', update_todo, name='update_todo'))
     cors.add(app.router.add_delete('/todos/{id:\d+}', remove_todo, name='remove_todo'))
 
-    #new functionality
+    # new functionality
     cors.add(app.router.add_get('/todos/{id:\d+}/tags/', all_tags_of_todo, name='todo_tags'))
     cors.add(app.router.add_post('/todos/{id:\d+}/tags/', add_tag_to_todo, name='add_tag_todo'))
     cors.add(app.router.add_delete('/todos/{id:\d+}/tags/', delete_tag_to_todo, name='delete_tag_todo'))
 
-    #tags
+    # tags
     cors.add(app.router.add_get('/tags/', get_all_tags, name='all_tags'))
     cors.add(app.router.add_post('/tags/', create_tag, name='create_tag'))
     cors.add(app.router.add_get('/tags/{id:\d+}', get_one_tag, name='get_one_tag'))
