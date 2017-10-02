@@ -33,10 +33,6 @@ def create_tables(engine):
 
 
 def drop_tables(engine):
-    try:
-        todo_tag_connection.drop(engine)
-    except OperationalError:
-        print("todo_tag_connection table dont exist")
     Todo.__table__.drop(engine)
     Tag.__table__.drop(engine)
 
