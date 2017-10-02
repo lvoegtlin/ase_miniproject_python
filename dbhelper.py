@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine
+from sqlalchemy.exc import OperationalError
 from dbobjects import Todo, Tag, Base, todo_tag_connection
 from sqlalchemy.orm import sessionmaker
 
@@ -32,7 +33,10 @@ def create_tables(engine):
 
 
 def drop_tables(engine):
-    todo_tag_connection.drop(engine)
+    try:
+        todo_tag_connection.drop(engine)
+    except OperationalError:
+        print("todo_tag_connection table dont exist")
     Todo.__table__.drop(engine)
     Tag.__table__.drop(engine)
 
