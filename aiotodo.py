@@ -57,7 +57,7 @@ async def create_todo(request):
         return web.json_response({'error': '"title" must be a string with at least one character'})
 
     data['completed'] = bool(data.get('completed', False))
-    order_nbr = session.query(func.max(Todo.display_order)).first()[0] + 1
+    order_nbr = int(data.get('display_order', session.query(func.max(Todo.display_order)).first()[0] + 1)
     todo = Todo(title=title, display_order=order_nbr, completed=data['completed'])
 
     data['url'] = str(request.url.join(request.app.router['one_todo'].url_for(id=todo.todo_id)))
