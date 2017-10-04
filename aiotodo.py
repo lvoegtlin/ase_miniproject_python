@@ -16,7 +16,7 @@ async def get_all_todos(request):
         except NoResultFound:
             return web.json_response({'error': 'Tag not found'}, status=404)
 
-        rows = session.query(Todo).filter(Todo.tags.contains(tag))
+        rows = tag.todos
     else:
         rows = session.query(Todo).all()
 
@@ -120,7 +120,7 @@ async def all_tags_of_todo(request):
     except NoResultFound:
         return web.json_response({'error': 'Tag not found'}, status=404)
 
-    return web.json_response(row.toDict())
+    return web.json_response([tag.toDict() for tag in row.tags])
 
 
 async def add_tag_to_todo(request):
