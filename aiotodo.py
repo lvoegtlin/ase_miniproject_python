@@ -150,16 +150,24 @@ async def add_tag_to_todo(request):
 
 async def delete_tag_to_todo(request):
     session = request.app['dbsession']()
-    id = int(request.match_info['id'])
+    todo_id = int(request.match_info['todo_id'])
+    tag_id = int(request.match_info['tag_id'])
 
     try:
-        row = session.query(Todo).filter_by(todo_id=id).one()
+        row = session.query(Todo).filter_by(todo_id=todo_id).one()
     except MultipleResultsFound:
         return web.json_response({'error': 'More then one Todo with the same id'}, status=500)
     except NoResultFound:
         return web.json_response({'error': 'Todo not found'}, status=404)
 
-    row.tags = []
+    try:
+        tag = session.query(Tag).filter_by(tag_id=tag_id).one()
+    except MultipleResultsFound:
+        return web.json_response({'error': 'More then one Tag with the same id'}, status=500)
+    except NoResultFound:
+        return web.json_response({'error': 'Tag not found'}, status=404)
+
+    row.tags.remove(tag)
     session.commit()
 
     return web.Response(status=200)
@@ -279,7 +287,7 @@ def app_factory(args=()):
     # new functionality
     cors.add(app.router.add_get('/todos/{id:\d+}/tags/', all_tags_of_todo, name='todo_tags'))
     cors.add(app.router.add_post('/todos/{id:\d+}/tags/', add_tag_to_todo, name='add_tag_todo'))
-    cors.add(app.router.add_delete('/todos/{id:\d+}/tags/', delete_tag_to_todo, name='delete_tag_todo'))
+    cors.add(app.router.add_delete('/todos/{todo_id:\d+}/tags/{tag_id:\d+}', delete_tag_to_todo, name='delete_tag_todo'))
 
     # tags
     cors.add(app.router.add_get('/tags/', get_all_tags, name='all_tags'))
