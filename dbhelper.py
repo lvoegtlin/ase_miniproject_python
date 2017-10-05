@@ -33,8 +33,7 @@ def create_tables(engine):
 
 
 def drop_tables(engine):
-    Todo.__table__.drop(engine)
-    Tag.__table__.drop(engine)
+    Base.metadata.drop_all(engine)
 
 
 def redo_tables(app):
