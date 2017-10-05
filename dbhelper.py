@@ -36,11 +36,7 @@ def drop_tables(engine):
     Base.metadata.drop_all(engine)
 
 
-def redo_tables(app):
-    drop_tables(app['db'])
-    create_todo_tables(app)
-
-
 async def create_todo_tables(app):
+    drop_tables(app['db'])
     create_tables(app['db'])
     initial_values(app)

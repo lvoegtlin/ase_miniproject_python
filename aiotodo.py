@@ -1,5 +1,5 @@
 from aiohttp import web
-from dbhelper import connect_db, redo_tables, create_todo_tables, close_db
+from dbhelper import connect_db, create_todo_tables, close_db
 from dbobjects import Todo, Tag
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy import func
@@ -272,8 +272,6 @@ def app_factory(args=()):
 
     if '--tables-create' in args:
         app.on_startup.append(create_todo_tables)
-    if '--tables-redo' in args:
-        app.on_startup.append(redo_tables)
 
     app.on_shutdown.append(close_db)
 
